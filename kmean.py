@@ -26,15 +26,6 @@ class DataPoint:
             print('DataPoint not matched, returning infinity', file=sys.stderr)
             return numpy.inf
         return numpy.linalg.norm(self.data - other.data)
-    
-    # def _zscore(self):
-    #     if numpy.std(self._raw_data) == 0: # all data points are same
-    #         return numpy.zeros(self._raw_data.shape)
-    #     else:
-    #         return (self._raw_data - numpy.mean(self._raw_data) / numpy.std(self._raw_data))
-        
-
-    
 
 # # Algorithm for kmeans # #
 # 1. initialize data points and k
@@ -48,8 +39,8 @@ P = TypeVar('P', bound= DataPoint)
 class KMeans(Generic[P]):
     @dataclass
     class Cluster:
-        centeroid: P|None
-        cluster: list[P]
+        centeroid: P
+        members: list[P]
 
     def __init__(self, k:int, data_points: list(P)):
         if k < 1:
@@ -62,7 +53,7 @@ class KMeans(Generic[P]):
             self.clusters.append(self.Cluster(self.random_centeroids(), []))
 
     def __repr__(self) -> str:
-        return f'{self.clusters}'
+        return f'{self.memberss}'
     
     def random_centeroids(self) -> P:
         data= reduce(lambda x,y: numpy.vstack([x.data, y.data]), self.data_points)
@@ -90,7 +81,7 @@ class KMeans(Generic[P]):
         for point in self.data_points:
             dist = numpy.linalg.norm(centeroids - point.data, axis = 1)
             idx = numpy.argmin(dist)
-            self.clusters[idx].cluster.append(point)
+            self.clusters[idx].members.append(point)
 
     def calculate_centeroids(self):
         for clust in self.clusters:
@@ -100,7 +91,7 @@ class KMeans(Generic[P]):
     def run(self, max_iterations: int = 100) -> List[KMeans.Cluster]:
         for iters in range(max_iterations):
             for clust in self.clusters:
-                clust.cluster.clear()
+                clust.members.clear()
 
             self.assign_clusters()
             previous_centeroids: List[Point] = deepcopy(self._centeroids)
