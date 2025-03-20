@@ -38,7 +38,7 @@ class DataPoint:
 P = TypeVar('P', bound= DataPoint)
 class KMeans(Generic[P]):
     @dataclass
-    class Cluster:
+    class Clust:
         centeroid: P
         members: list[P]
 
@@ -48,9 +48,9 @@ class KMeans(Generic[P]):
         self.k= k
         self.data_points = data_points
         self.zscore_normalize()
-        self.clusters: list(self.Cluster) = []
+        self.clusters: list(self.Clust) = []
         for _ in range(self.k):
-            self.clusters.append(self.Cluster(self.random_centeroids(), []))
+            self.clusters.append(self.Clust(self.random_centeroids(), []))
 
     def __repr__(self) -> str:
         return f'{self.memberss}'
@@ -88,7 +88,7 @@ class KMeans(Generic[P]):
             data= reduce(lambda x,y: numpy.vstack([x.data, y.data]), clust.cluster)
             clust.centeroid = DataPoint(data.mean(axis= 0))
 
-    def run(self, max_iterations: int = 100) -> List[KMeans.Cluster]:
+    def run(self, max_iterations: int = 100) -> List[KMeans.Clust]:
         for iters in range(max_iterations):
             for clust in self.clusters:
                 clust.members.clear()
