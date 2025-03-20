@@ -1,5 +1,5 @@
-from constraint import *
 from icecream import ic
+from constraint import Constraint, ConstraintSatisfactionProblem
 
 class MapConstraint(Constraint[str, str]):
     def __init__(self, variable1, variable2):

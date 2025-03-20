@@ -1,4 +1,4 @@
-from kmean import *
+from kmean import KMeans, DataPoint
 from subprocess import getoutput
 getoutput('python3 -m pip install icecream')
 from icecream import ic

@@ -1,8 +1,8 @@
-from constraint import *
 from icecream import ic
+from constraint import Constraint, ConstraintSatisfactionProblem
 
 class QueenConstraint(Constraint[int, int]):
-    def __init__(self, columns: list(int)):
+    def __init__(self, columns: list[int]):
         super().__init__(columns)
         self.columns = columns
 

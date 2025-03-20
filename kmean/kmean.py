@@ -46,13 +46,13 @@ class KMeans(Generic[P]):
         centeroid: P
         members: list[P]
 
-    def __init__(self, k:int, data_points: list(P)):
+    def __init__(self, k:int, data_points: list[P]):
         if k < 1:
             raise ValueError('k must be positive integer')
         self.k= k
         self.data_points = data_points
         self.zscore_normalize()
-        self.clusters: list(self.Clust) = []
+        self.clusters: list[KMeans.Clust] = []
         for _ in range(self.k):
             self.clusters.append(self.Clust(centeroid=self.random_centeroids(), members=[]))
 
