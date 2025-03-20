@@ -76,7 +76,7 @@ class KMeans(Generic[P]):
             if numpy.allclose(calculated_std, 0): # all data points are same
                 temp_array[:,i] = numpy.zeros(temp_array.shape[0])
             else:
-                temp_array[:,i] = (temp_array[:,i] - numpy.mean(temp_array[:,i]) / calculated_std
+                temp_array[:,i] = (temp_array[:,i] - numpy.mean(temp_array[:,i])) / calculated_std
         # put back to DataPoints
         for i in range(temp_array.shape[0]): # each row is one data_point
             self.data_points[i].data = temp_array[i,:]
@@ -90,7 +90,7 @@ class KMeans(Generic[P]):
 
     def calculate_centeroids(self):
         for clust in self.clusters:
-            temp_array= reduce(lambda x,y: numpy.vstack([x.data, y.data]), clust.cluster)
+            temp_array= reduce(lambda x,y: numpy.vstack([x.data, y.data]), clust.members)
             clust.centeroid = DataPoint(temp_array.mean(axis= 0))
 
     def run(self, max_iterations: int = 100) -> list[KMeans.Clust]:
@@ -105,7 +105,7 @@ class KMeans(Generic[P]):
             
             centroid_shift = sum([previous_centeroid.distance(current_centeroid)
                            for previous_centeroid, current_centeroid in zip(previous_centeroids, current_centeroids)])
-            if centroid_shift < 1e-18:
+            if (centroid_shift < 1e-18):
                 print(f'Converged after {iters} iterations')
                 return self.clusters
 
