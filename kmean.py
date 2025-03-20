@@ -85,30 +85,28 @@ class KMeans(Generic[P]):
         centeroids= [clust.centeroid.data for clust in self.clusters]
         for point in self.data_points:
             dist = numpy.linalg.norm(centeroids - point.data, axis = 1)
-            idx = numpy.argmin(dist)
+            idx = numpy.argmin(dist) # which centeroid is closest?
             self.clusters[idx].members.append(point)
 
     def calculate_centeroids(self):
         for clust in self.clusters:
-            data= reduce(lambda x,y: numpy.vstack([x.data, y.data]), clust.cluster)
-            clust.centeroid = DataPoint(data.mean(axis= 0))
+            temp_array= reduce(lambda x,y: numpy.vstack([x.data, y.data]), clust.cluster)
+            clust.centeroid = DataPoint(temp_array.mean(axis= 0))
 
-    def run(self, max_iterations: int = 100) -> List[KMeans.Clust]:
+    def run(self, max_iterations: int = 100) -> list[KMeans.Clust]:
         for iters in range(max_iterations):
             for clust in self.clusters:
                 clust.members.clear()
 
             self.assign_clusters()
-            previous_centeroids: List[Point] = deepcopy(self._centeroids)
+            previous_centeroids: list[P] = [clust.centeroid for clust in self.clusters]
             self.calculate_centeroids()
-
+            current_centeroids: list[P] = [clust.centeroid for clust in self.clusters]
             centroid_shift = sum([previous_centeroid.distance(current_centeroid)
-                           for previous_centeroid, current_centeroid in zip(previous_centeroids, self._centeroids)])
+                           for previous_centeroid, current_centeroid in zip(previous_centeroids, current_centeroids)])
             if centroid_shift < 1e-18:
                 print(f'Converged after {iters} iterations')
                 return self._clusters
 
         print('Did not converged in 100 iterations')
         return self._clusters
-        pass
-
