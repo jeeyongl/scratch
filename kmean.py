@@ -54,10 +54,10 @@ class KMeans(Generic[P]):
         self.zscore_normalize()
         self.clusters: list(self.Clust) = []
         for _ in range(self.k):
-            self.clusters.append(self.Clust(self.random_centeroids(), []))
+            self.clusters.append(self.Clust(centeroid=self.random_centeroids(), members=[]))
 
     def __repr__(self) -> str:
-        return f'{self.memberss}'
+        return f'{self.clusters}'
     
     def random_centeroids(self) -> P:
         data= reduce(lambda x,y: numpy.vstack([x.data, y.data]), self.data_points)
