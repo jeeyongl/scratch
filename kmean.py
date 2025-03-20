@@ -71,13 +71,14 @@ class KMeans(Generic[P]):
         # combine DataPoints.data
         temp_array= reduce(lambda x,y: numpy.vstack([x.data, y.data]), self.data_points)
         # calc z-score
-        for i in range(temp_array.shape[1]):
-            if numpy.std(temp_array[:,i]) == 0: # all data points are same
+        for i in range(temp_array.shape[1]): # each col should be normalized for comparison
+            calculated_std = numpy.std(temp_array[:,i])
+            if numpy.allclose(calculated_std, 0): # all data points are same
                 temp_array[:,i] = numpy.zeros(temp_array.shape[0])
             else:
-                temp_array[:,i] = (temp_array[:,i] - numpy.mean(temp_array[:,i]) / numpy.std(temp_array[:,i]))
+                temp_array[:,i] = (temp_array[:,i] - numpy.mean(temp_array[:,i]) / calculated_std
         # put back to DataPoints
-        for i in range(temp_array.shape[0]):
+        for i in range(temp_array.shape[0]): # each row is one data_point
             self.data_points[i].data = temp_array[i,:]
         
     def assign_clusters(self):
