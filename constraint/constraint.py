@@ -1,5 +1,6 @@
 from __future__ import annotations
 from typing import Generic, TypeVar
+from copy import deepcopy
 
 # variable, domain
 V = TypeVar('V')
@@ -29,11 +30,25 @@ class ConstraintSatisfactionProblem(Generic[V,D]):
                 raise(f'cannot set restriction on variable, {v}.')
         pass
 
+    # maximum number of backtracking : len(V)*len(D)
     def backtracking_search(self, assignment: dict[V,D] = {}) -> dict[V,D]|None:
         # all assigned
-
+        if len(self.variables) == len(assignment):
+            return assignment
         # find unassigend variables
+        unassigned_variables = [v for v in self.variables if v not in assignment]
+        checking_variable = unassigned_variables[0]
 
-        # 
+        for domain_value in self.domains[checking_variable]:
+            # assign one more variable here
+            copied_assignment = deepcopy(assignment)
+            copied_assignment[checking_variable] = domain_value
 
-        pass
+            # check constraints for checking_variable
+            if all(constraint.satisfied(copied_assignment) for constraint in self.constraints[checking_variable]):
+                # if ok, then recursive call, otherwise next possible domain
+                result = self.backtracking_search(copied_assignment)
+                if result is not None: 
+                    return result # recursive return of found assignment
+
+        return None
