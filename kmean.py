@@ -60,25 +60,25 @@ class KMeans(Generic[P]):
         return f'{self.clusters}'
     
     def random_centeroids(self) -> P:
-        data= reduce(lambda x,y: numpy.vstack([x.data, y.data]), self.data_points)
-        low, high = (numpy.min(data, axis= 0), numpy.max(data, axis= 0))
-        cent= numpy.zeros(low.shape[0])
+        temp_array= reduce(lambda x,y: numpy.vstack([x.data, y.data]), self.data_points)
+        low, high = (numpy.min(temp_array, axis= 0), numpy.max(temp_array, axis= 0))
+        return_array= numpy.zeros(low.shape[0])
         for i in range(low.shape[0]):
-            cent[i] = random.uniform(low[i], high[i])
-        return DataPoint(cent)
+            return_array[i] = random.uniform(low[i], high[i])
+        return DataPoint(return_array)
     
     def zscore_normalize(self):
         # combine DataPoints.data
-        data= reduce(lambda x,y: numpy.vstack([x.data, y.data]), self.data_points)
+        temp_array= reduce(lambda x,y: numpy.vstack([x.data, y.data]), self.data_points)
         # calc z-score
-        for i in range(data.shape[1]):
-            if numpy.std(data[:,i]) == 0: # all data points are same
-                data[:,i] = numpy.zeros(data.shape[0])
+        for i in range(temp_array.shape[1]):
+            if numpy.std(temp_array[:,i]) == 0: # all data points are same
+                temp_array[:,i] = numpy.zeros(temp_array.shape[0])
             else:
-                data[:,i] = (data[:,i] - numpy.mean(data[:,i]) / numpy.std(data[:,i]))
+                temp_array[:,i] = (temp_array[:,i] - numpy.mean(temp_array[:,i]) / numpy.std(temp_array[:,i]))
         # put back to DataPoints
-        for i in range(data.shape[0]):
-            self.data_points[i].data = data[i,:]
+        for i in range(temp_array.shape[0]):
+            self.data_points[i].data = temp_array[i,:]
         
     def assign_clusters(self):
         centeroids= [clust.centeroid.data for clust in self.clusters]
