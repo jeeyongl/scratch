@@ -61,6 +61,7 @@ class KMeans(Generic[P]):
     
     def random_centeroids(self) -> P:
         temp_array= reduce(lambda x,y: numpy.vstack([x.data, y.data]), self.data_points)
+        # temp_array= numpy.vstack([point.data for point in self.data_points]) # same as above
         low, high = (numpy.min(temp_array, axis= 0), numpy.max(temp_array, axis= 0))
         return_array= numpy.zeros(low.shape[0])
         for i in range(low.shape[0]):
@@ -70,6 +71,7 @@ class KMeans(Generic[P]):
     def zscore_normalize(self):
         # combine DataPoints.data
         temp_array= reduce(lambda x,y: numpy.vstack([x.data, y.data]), self.data_points)
+        # temp_array= numpy.vstack([point.data for point in self.data_points]) # same as above
         # calc z-score
         for i in range(temp_array.shape[1]): # each col should be normalized for comparison
             calculated_std = numpy.std(temp_array[:,i])
@@ -90,7 +92,9 @@ class KMeans(Generic[P]):
 
     def calculate_centeroids(self):
         for clust in self.clusters:
-            temp_array= reduce(lambda x,y: numpy.vstack([x.data, y.data]), clust.members)
+            if not clust.members:
+                continue
+            temp_array= numpy.vstack([member.data for member in clust.members])
             clust.centeroid = DataPoint(temp_array.mean(axis= 0))
 
     def run(self, max_iterations: int = 100) -> list[KMeans.Clust]:
