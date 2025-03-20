@@ -102,11 +102,12 @@ class KMeans(Generic[P]):
             previous_centeroids: list[P] = [clust.centeroid for clust in self.clusters]
             self.calculate_centeroids()
             current_centeroids: list[P] = [clust.centeroid for clust in self.clusters]
+            
             centroid_shift = sum([previous_centeroid.distance(current_centeroid)
                            for previous_centeroid, current_centeroid in zip(previous_centeroids, current_centeroids)])
             if centroid_shift < 1e-18:
                 print(f'Converged after {iters} iterations')
-                return self._clusters
+                return self.clusters
 
         print('Did not converged in 100 iterations')
-        return self._clusters
+        return self.clusters
