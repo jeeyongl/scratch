@@ -8,6 +8,10 @@ from functools import reduce
 
 
 class DataPoint:
+    self._raw_data: numpy.array
+    self.data: numpy.array
+    self.shape: tuple[int,...]
+    
     def __init__(self, data: Iterable[float]):
         self._raw_data = numpy.array(data, dtype= numpy.float32).flatten()
         self.data = numpy.array(data, dtype= numpy.float32).flatten() #self._zscore()
