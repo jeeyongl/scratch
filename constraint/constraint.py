@@ -11,7 +11,7 @@ class Constraint(Generic[V,D]):
         self.variables_to_be_restricted = variables_to_be_restricted
         pass
     def satisfied(self, assignment_to_be_tested: dict[V,D]) -> bool:
-        retrun True
+        return True
 
 
 class ConstraintSatisfactionProblem(Generic[V,D]):
@@ -19,16 +19,14 @@ class ConstraintSatisfactionProblem(Generic[V,D]):
         self.variables = variables
         self.domains = domains
         self.constraints : dict[V, list[Constraint]] = {}
-        pass
 
     def add_constraint(self, constraint: Constraint[V,D]):
         # check V & D
         for v in constraint.variables_to_be_restricted:
             if v in self.variables:
-                self.constraints[v].append(constraint)
+                self.constraints.setdefault(v, []).append(constraint)
             else:
-                raise(f'cannot set restriction on variable, {v}.')
-        pass
+                raise LookupError(f'cannot set restriction on variable, {v}.')
 
     # maximum number of backtracking : len(V)*len(D)
     def backtracking_search(self, assignment: dict[V,D] = {}) -> dict[V,D]|None:
