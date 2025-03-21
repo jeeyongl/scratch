@@ -8,6 +8,7 @@ class MapConstraint(Constraint[str, str]):
         self.variable2 = variable2
 
     def satisfied(self, assignment_to_be_tested):
+        # assignment is a form of {variable: domain}
         if (self.variable1 not in assignment_to_be_tested 
             or 
             self.variable2 not in assignment_to_be_tested):
